@@ -1,5 +1,9 @@
 ---
 title: "README"
+output:
+  html_document:
+    toc: true
+    number_sections: 
 ---
 
 <!-- README.Rmd is used for generating README.Rmd. -->

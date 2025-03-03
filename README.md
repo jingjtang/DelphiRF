@@ -148,7 +148,7 @@ as needed using fixed hyperparameters.
            y = "Mean WIS Score") +
       theme_minimal()  # Apply a clean theme
 
-![](README_files/figure-markdown_strict/unnamed-chunk-20-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
     visual_part <- results %>%
       filter(report_date == as.Date("2022-06-30")) %>%
@@ -164,7 +164,7 @@ as needed using fixed hyperparameters.
       xlab("Reference Date") + ylab("Estimated cases") +
       ggtitle("Observed and forecasted number of cases on date 2022-06-15")
 
-![](README_files/figure-markdown_strict/unnamed-chunk-21-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 #### Optional Arguments
 
