@@ -167,6 +167,8 @@ revision_forecast <- function(train_data, test_data, taus,
 #' @param lambda_candidates Numeric vector of lambda values to try.
 #' @param gamma_candidates Numeric vector of gamma values to try.
 #' @param lag_pad_candidates Numeric vector of lag padding values to try.
+#' @param lagged_term_list Optional list of lagged terms to be included in the model.
+#' @param params_list Optional list of additional parameters for the model.
 #' @param smoothed_target A logical value indicating whether the target variable should be smoothed.
 #' @param temporal_resol Character; either "daily" or "weekly" resolution.
 #' @param n_folds Integer, number of cross-validation folds.
@@ -184,6 +186,9 @@ revision_forecast <- function(train_data, test_data, taus,
 #' @template value_type-template
 #' @template training_end_date-template
 #' @template training_days-template
+#'
+#' @importFrom dplyr filter
+#'
 #' @export
 #'
 cv_revision_forecast <- function(df, test_lag, taus=TAUS,
@@ -270,7 +275,7 @@ cv_revision_forecast <- function(df, test_lag, taus=TAUS,
 #' Revision Forecast for a Specific Location
 #'
 #' This function performs a forecasting operation using historical data, applying
-#' hyperparameters and lag-based adjustments for different test lag groups.
+#' hyper-parameters and lag-based adjustments for different test lag groups.
 #'
 #' @param df A data frame containing historical data with `target_date` and `report_date` columns.
 #' @param testing_start_date A character or Date object specifying the start date for testing.
