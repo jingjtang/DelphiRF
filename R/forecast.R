@@ -326,6 +326,7 @@ DelphiRF <- function(df, testing_start_date, taus=TAUS,
     dplyr::filter(.data$target_date > testing_start_date - training_days)
   # Add weighting-related features to training data
   geo_train_data <- add_weights_related(geo_train_data)
+
   geo_test_data <- df %>%
     dplyr::filter(.data$report_date >= testing_start_date)
 
@@ -333,11 +334,12 @@ DelphiRF <- function(df, testing_start_date, taus=TAUS,
 
   # Split the test lag group if it's a range (e.g., "15-21")
   for (test_lag_group in test_lag_groups) {
+
     info <- strsplit(as.character(test_lag_group), "-")[[1]]
     if (length(info) == 1) {
-      test_lag_group <- as.integer(info[1])
+      test_lag <- as.integer(info[1])
     } else {
-      test_lag_group <- c(as.integer(info[1]), as.integer(info[2]))
+      test_lag <- c(as.integer(info[1]), as.integer(info[2]))
     }
 
     # Retrieve hyperparameters for the given test lag group
@@ -345,9 +347,9 @@ DelphiRF <- function(df, testing_start_date, taus=TAUS,
     l <- handle_hyperparam(lambda, test_lag_group)
     g <- handle_hyperparam(gamma, test_lag_group)
 
-    train_data <- data_filteration(test_lag_group, geo_train_data, l_p)
+    train_data <- data_filteration(test_lag, geo_train_data, l_p)
     if (nrow(train_data) == 0) next
-    test_data <- data_filteration(test_lag_group, geo_test_data, 0)
+    test_data <- data_filteration(test_lag, geo_test_data, 0)
     if (nrow(test_data) == 0) next
 
     results <- revision_forecast(train_data, test_data, taus,
@@ -356,7 +358,7 @@ DelphiRF <- function(df, testing_start_date, taus=TAUS,
                                  l, g, lp_solver, test_lag_group,
                                  geo, value_type, model_save_dir,
                                  indicator, signal, geo_level,
-                                 signal_suffix, training_end_date,
+                                 signal_suffix, as.character(testing_start_date),
                                  training_days, train_models,
                                  make_predictions)
 
