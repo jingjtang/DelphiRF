@@ -350,6 +350,7 @@ DelphiRF <- function(df, testing_start_date, taus=TAUS,
     if (nrow(train_data) == 0) next
     test_data <- data_filteration(test_lag_group, geo_test_data, 0)
     if (nrow(test_data) == 0) next
+
     results <- revision_forecast(train_data, test_data, taus,
                                  smoothed_target, lagged_term_list,
                                  params_list, temporal_resol,
