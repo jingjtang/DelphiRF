@@ -103,14 +103,13 @@ revision_forecast <- function(train_data, test_data, taus,
   # pre-process the test data with max_raw
   if (make_predictions) {
     # Get model path
-    model_file_name <- generate_filename(indicator=indicator, signal=signal,
+    model_path <- generate_filename(indicator=indicator, signal=signal,
                                          geo_level=geo_level, signal_suffix=signal_suffix,
                                          lambda=lambda[1], gamma=gamma[1], training_end_date=training_end_date,
                                          training_days=training_days,
                                          geo=geo, value_type=value_type,
-                                         test_lag_group=test_lag_group, tau="_all")
-    model_path <- file.path(model_save_dir, model_file_name)
-
+                                         test_lag_group=test_lag_group, tau="_all",
+                                         model_save_dir=model_save_dir)
     # Get the trained_model
     obj <- get_model(model_path, train_data, params_list, response, taus, sqrt_max_raw,
                      lambda[1], gamma[1], lp_solver, train_models)
@@ -130,13 +129,13 @@ revision_forecast <- function(train_data, test_data, taus,
     for (g in gamma) {
       if (l == lambda[1] & g == gamma[1]) next
       # Get model path
-      model_file_name <- generate_filename(indicator=indicator, signal=signal,
+      model_path <- generate_filename(indicator=indicator, signal=signal,
                                            geo_level=geo_level, signal_suffix=signal_suffix,
                                            lambda=l, gamma=g, training_end_date=training_end_date,
                                            training_days=training_days,
                                            geo=geo, value_type=value_type,
-                                           test_lag_group=test_lag_group, tau="_all")
-      model_path <- file.path(model_save_dir, model_file_name)
+                                           test_lag_group=test_lag_group, tau="_all",
+                                           model_save_dir=model_save_dir)
 
 
       # Get the trained_model
