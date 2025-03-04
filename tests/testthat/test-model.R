@@ -49,11 +49,17 @@ covariates <- c(main_covariate, dayofweek_covariate)
 test_that("testing the generation of model filename prefix", {
   model_file_name <- generate_filename(indicator, signal,
                                        geo_level, signal_suffix, lambda, gamma,
-                                       training_end_date=training_end_date)
+                                       training_end_date=training_end_date,
+                                       model_save_dir=model_save_dir)
   expected <- str_interp(
-    "${format(training_end_date, date_format)}_chng_outpatient_state_tw365_lambda0.1_gamma0.1.rds"
+    file.path(
+      model_save_dir,
+      "chng_outpatient_state/${format(training_end_date, date_format)}_tw365_lambda0.1_gamma0.1.rds"
+    )
   )
   expect_equal(model_file_name, expected)
+
+  unlink(file.path(model_save_dir, "chng_outpatient_state"), recursive = TRUE)
 })
 
 test_that("testing prediction column exponentiation", {
@@ -90,31 +96,29 @@ test_that("testing prediction column exponentiation", {
 
 test_that("testing generating or loading the model", {
   # Check the model that does not exist
-  tau = 0.5
+  tau <- 0.5
   gamma <- 0.1
   lambda <- 0.1
   model_file_name <- generate_filename(indicator, signal,
                                        geo_level, signal_suffix, lambda, gamma,
                                        geo=geo, test_lag_group=test_lag_group, tau=tau,
                                        training_end_date=training_end_date,
-                                       training_days=training_days)
-  model_path <- file.path(model_save_dir, model_file_name)
-
+                                       training_days=training_days,
+                                       model_save_dir=model_save_dir)
   # Generate the model and check again
-  obj <- get_model(model_path, train_data, covariates, response, TAUS,
+  obj <- get_model(model_file_name, train_data, covariates, response, TAUS,
                    sqrt_max_raw, lambda, gamma, LP_SOLVER, train_models=TRUE)
-  expect_true(file.exists(model_path))
-  created <- file.info(model_path)$ctime
+  expect_true(file.exists(model_file_name))
+  created <- file.info(model_file_name)$ctime
   expect_equal(attr(obj, "sqrt_max_raw"), sqrt_max_raw)
 
   # Check that the model was not generated again.
   # Load existed model
-  obj <- get_model(model_path, train_data, covariates, response, TAUS,
+  obj <- get_model(model_file_name, train_data, covariates, response, TAUS,
                    sqrt_max_raw, lambda, gamma, LP_SOLVER, train_models=FALSE)
-  expect_equal(file.info(model_path)$ctime, created)
+  expect_equal(file.info(model_file_name)$ctime, created)
 
-  expect_silent(file.remove(model_path))
-  # Remove the model generated at the end
+  unlink(file.path(model_save_dir, "chng_outpatient_state"), recursive = TRUE)
 })
 
 test_that("testing making predictions", {
@@ -124,10 +128,10 @@ test_that("testing making predictions", {
                                        geo_level, signal_suffix, lambda, gamma,
                                        geo=geo, test_lag_group=test_lag_group, tau=tau,
                                        training_end_date=training_end_date,
-                                       training_days=training_days)
-  model_path <- file.path(model_save_dir, model_file_name)
+                                       training_days=training_days,
+                                       model_save_dir=model_save_dir)
 
-  obj <- get_model(model_path, train_data, covariates, response, tau,
+  obj <- get_model(model_file_name, train_data, covariates, response, tau,
                    sqrt_max_raw, lambda, gamma, LP_SOLVER, train_models=TRUE)
 
   expect_error(get_prediction(test_data, tau, covariates, response, NULL),
@@ -142,6 +146,7 @@ test_that("testing making predictions", {
   expect_true("lambda" %in% colnames(result))
   expect_equal(unique(result$gamma), gamma)
   expect_equal(unique(result$lambda), lambda)
+  unlink(file.path(model_save_dir, "chng_outpatient_state"), recursive = TRUE)
 })
 
 

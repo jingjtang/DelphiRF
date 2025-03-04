@@ -32,7 +32,7 @@ test_that("testing exporting the output file", {
   test_data[expected_col] = TRUE
   coef_data <- data.frame(test=TRUE)
 
-  components <- c(indicator, signal, signal_suffix)
+  components <- c(indicator, signal, signal_suffix, value_type, geo_level)
   signal_dir <- paste(components[components != ""], collapse="_")
 
   export_test_result(test_data, coef_data, indicator, signal,
@@ -40,9 +40,9 @@ test_that("testing exporting the output file", {
                      training_end_date, training_days,
                      value_type, params$export_dir)
   prediction_file <- file.path(params$export_dir, signal_dir,
-                               "prediction_20220101_chng_outpatient_fraction_state_tw7_lambda0.1_gamma0.1.csv.gz")
+                               "prediction_20220101_tw7_lambda0.1_gamma0.1.csv.gz")
   coefs_file <- file.path(params$export_dir, signal_dir,
-                          "coefs_20220101_chng_outpatient_fraction_state_tw7_lambda0.1_gamma0.1.csv.gz")
+                          "coefs_20220101_tw7_lambda0.1_gamma0.1.csv.gz")
 
   expect_true(file.exists(prediction_file))
   expect_true(file.exists(coefs_file))
