@@ -162,7 +162,7 @@ as needed using fixed hyperparameters.
       geom_ribbon(fill="indianred3",aes(x = reference_date,ymin=exp(predicted_tau0.25),
                                         ymax=exp(predicted_tau0.75)),alpha=0.3)+
       xlab("Reference Date") + ylab("Estimated cases") +
-      ggtitle("Observed and forecasted number of cases on date 2022-06-15")
+      ggtitle("Observed and forecasted number of cases on date 2022-06-30")
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
