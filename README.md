@@ -12,7 +12,7 @@ of finalized surveillance values for both count and fraction-based data.
 
 You can install the package directly from GitHub using:
 
-    devtools::install_github("cmu-delphi/DelphiRF")
+    devtools::install_github("jingjtang/DelphiRF")
 
 If you have downloaded the package to a local directory, you can install
 it with:
